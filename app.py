@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import json
+import os
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
 
-from school_agent.demo_engine import answer_student, memory_snapshot
+from school_agent.demo_engine import answer_student, load_local_env, memory_snapshot
 
 
 ROOT = Path(__file__).parent
@@ -17,6 +18,15 @@ class SchoolAgentHandler(SimpleHTTPRequestHandler):
         path = urlparse(self.path).path
         if path == "/":
             self.path = "/static/index.html"
+        elif path == "/api/health":
+            self._send_json(
+                {
+                    "ok": True,
+                    "googleApiKeyLoaded": bool(os.getenv("GOOGLE_API_KEY")),
+                    "model": os.getenv("GOOGLE_GENAI_MODEL", "gemini-2.5-flash"),
+                }
+            )
+            return
         elif path == "/api/memory":
             self._send_json(memory_snapshot())
             return
@@ -55,13 +65,14 @@ class SchoolAgentHandler(SimpleHTTPRequestHandler):
 
 
 def main() -> None:
+    load_local_env()
     port = 8080
     server = ThreadingHTTPServer(("127.0.0.1", port), SchoolAgentHandler)
     print(f"School Agent UI running at http://127.0.0.1:{port}")
-    print("Set GOOGLE_API_KEY before starting to use Gemini responses.")
+    print(f"GOOGLE_API_KEY loaded: {bool(os.getenv('GOOGLE_API_KEY'))}")
+    print(f"GOOGLE_GENAI_MODEL: {os.getenv('GOOGLE_GENAI_MODEL', 'gemini-2.5-flash')}")
     server.serve_forever()
 
 
 if __name__ == "__main__":
     main()
-
