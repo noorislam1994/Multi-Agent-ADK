@@ -5,6 +5,7 @@ __pycache__/
 *.py[cod]
 .env
 school_agent/.env
+travel_planner_agent/.env
 school_memory.json
 .DS_Store
 Thumbs.db

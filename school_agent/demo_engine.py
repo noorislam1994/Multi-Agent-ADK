@@ -54,7 +54,33 @@ SUBJECTS = {
 }
 
 
-MEMORY_FILE = Path("school_memory.json")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+MEMORY_FILE = PROJECT_ROOT / "school_memory.json"
+ENV_FILES = [
+    PROJECT_ROOT / ".env",
+    PROJECT_ROOT / "school_agent" / ".env",
+    PROJECT_ROOT / "travel_planner_agent" / ".env",
+]
+
+
+def load_local_env() -> None:
+    """Load local .env files without overriding variables already set in the shell."""
+
+    for env_file in ENV_FILES:
+        if not env_file.exists():
+            continue
+        for raw_line in env_file.read_text(encoding="utf-8").splitlines():
+            line = raw_line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key:
+                os.environ.setdefault(key, value)
+
+
+load_local_env()
 
 
 @dataclass
@@ -214,4 +240,3 @@ If the answer includes calculation, show the steps and final answer.
 def memory_snapshot() -> dict[str, Any]:
     memory = ChatMemory.load()
     return {"messages": memory.messages[-20:], "count": len(memory.messages)}
-
