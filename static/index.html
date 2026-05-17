@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>School Agent A2A</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">SA</div>
+          <div>
+            <h1>School Agent</h1>
+            <p>Google ADK A2A coordinator</p>
+          </div>
+        </div>
+
+        <section class="panel">
+          <h2>Root Agent</h2>
+          <div class="root-agent">
+            <span class="status-dot"></span>
+            <div>
+              <strong>School Coordinator</strong>
+              <p>Routes each student request to a specialist teacher agent.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Teacher Agents</h2>
+          <div class="agent-list" id="agentList"></div>
+        </section>
+
+        <section class="panel compact">
+          <h2>Tools</h2>
+          <div class="tool-grid">
+            <span>Calculator</span>
+            <span>Knowledge Search</span>
+            <span>Memory Store</span>
+          </div>
+        </section>
+      </aside>
+
+      <main class="chat-area">
+        <header class="topbar">
+          <div>
+            <h2>Student Chat</h2>
+            <p id="modelState">Checking runtime...</p>
+          </div>
+          <button class="icon-button" id="refreshMemory" title="Refresh memory" aria-label="Refresh memory">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v6h-6"/></svg>
+          </button>
+        </header>
+
+        <section class="messages" id="messages" aria-live="polite">
+          <article class="message assistant">
+            <div class="bubble">
+              Ask any school question. The coordinator will choose a teacher agent and keep conversation memory.
+            </div>
+          </article>
+        </section>
+
+        <form class="composer" id="chatForm">
+          <textarea id="messageInput" rows="2" placeholder="Example: Solve 24 * 7 + 18, then explain the steps"></textarea>
+          <button type="submit" title="Send message" aria-label="Send message">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+          </button>
+        </form>
+      </main>
+
+      <aside class="memory-pane">
+        <section class="panel memory-panel">
+          <h2>Conversation Memory</h2>
+          <div id="memoryList" class="memory-list"></div>
+        </section>
+        <section class="panel flow-panel">
+          <h2>A2A Flow</h2>
+          <ol>
+            <li>Student sends natural language query.</li>
+            <li>Root Agent identifies the subject.</li>
+            <li>Coordinator delegates to a teacher sub-agent.</li>
+            <li>Tools run when useful.</li>
+            <li>Final answer returns to the student.</li>
+          </ol>
+        </section>
+      </aside>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
+
